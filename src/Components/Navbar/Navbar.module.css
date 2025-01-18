@@ -1,0 +1,7 @@
+
+.navbar
+{
+    z-index: 9;
+    margin-bottom: 100px !important;
+    background: green !important;
+}

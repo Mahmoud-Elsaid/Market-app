@@ -1,0 +1,41 @@
+
+.cartbody
+{
+    background-color: #EAEDED
+}
+
+.cart
+{
+    background-color: #fff;
+}
+
+.icon 
+{
+    width: 35px;
+    height: 35px;
+    border: 1px solid #0aad0a;
+    border-radius: 50%;
+    cursor: pointer;
+
+}
+
+.iconminus
+{
+    width: 35px;
+    height: 35px;
+    border: 1px solid red;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.iconminus:hover
+{
+    background-color: #dc3545;
+    color: white !important;
+}
+
+.iconplus:hover
+{
+    background-color:#ffc107 ;
+    color: white !important;
+}

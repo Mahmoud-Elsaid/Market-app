@@ -1,0 +1,16 @@
+
+.productsDetails
+{
+    background-color: #dddcdc;
+    /* height: 100vh; */
+}
+
+.item
+{
+    border: #0aad0a 1px solid;
+}
+
+.rating i
+{
+    color:  #f1c30d;
+}
