@@ -66,7 +66,7 @@ export default function Navbar() {
               </li>
 
               <li className="nav-item">
-                <NavLink to="products" className="nav-link text-light bg-danger">
+                <NavLink to="products" className="nav-link text-light ">
                   Products
                 </NavLink>
               </li>
