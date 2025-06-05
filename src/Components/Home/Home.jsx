@@ -1,17 +1,20 @@
-import React from 'react'
-import Mainslider from '../Mainslider/Mainslider'
-import Categoriesslider from '../Categoriesslider/Categoriesslider'
-import Products from '../Products/Products'
 
+
+import React, { useContext } from 'react'
+import './Home.module.css'
+import { userContext } from '../../Context/UserContext'
+import CategorySlider from '../CategorySlider/CategorySlider'
+import Header from '../Header/Header'
+import Products from '../Products/Products'
 export default function Home() {
+
+    let {UserToken} = useContext(userContext)
+
   return (
-    <div>
-      <div className=' mb-5'>
-          <Mainslider/>
-      </div>
-      
-      <Categoriesslider/>
-      <Products/>
-    </div>
+    <>
+        <Header/>
+        <CategorySlider/>
+        <Products/>
+    </>
   )
 }

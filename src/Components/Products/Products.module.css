@@ -1,73 +1,74 @@
 
 
-.Productsbutton
+.myContainer
 {
-    background-color: #0aad0a !important;
-    align-self: center; /* Center the button horizontally */
-    
-    border: none;
-    border-radius: 4px;
-    font-size: 1rem;
-    cursor: pointer;
-    transition: background-color 0.3s;
-}
-.Productsbutton:hover
-{
-    background-color: rgba(10, 173, 10 , .1);
-}
-
-.colormain
-{
-    color: #0aad0a !important;
-}
-
-.item:hover
-{
-    border: 1px solid #0aad0a !important;
-    border-radius: 10px;
-    box-shadow:  rgba(145, 158, 171, .2) 0px 2px 4px -1px, rgba(145, 158, 171, .14) 0px 4px 5px 0px, rgba(145, 158, 171, .12) 0px 1px 10px 0px;
-    
+    width: 90%;
     
 }
 
-.item:hover h3
+
+.productItem
+{
+    background-color: white;
+    box-shadow: silver 0px 0px 10px;
+    position: relative;
+    overflow: hidden;
+
+}
+
+.productCart:hover
 {
     color: #0aad0a;
-    
 }
 
-.dicorationNon
+.productItem:hover .detailsBtn
 {
-    text-decoration: none;
+    opacity: 1;
+    transform: translateY(-50%);
+    cursor: z;
 }
 
-.product {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    height: 100%; /* Ensures the parent container spans full height */
-    padding: 10px;
-    border: 1px solid #ddd; /* Optional styling */
-    border-radius: 8px; /* Optional styling */
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Optional styling */
-    background-color: #fff; /* Optional styling */
-  }
+.detailsBtn
+{
+    transition: transform 1s, opacity 1s;
+    transform: translateY(100%);
+    opacity: 0;
+}
+.productItem::after
+{
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 0;
+    height: 100%;
+    width: 2px;
+    background-color: blueviolet;
+    transition: top .5s;
+}
 
-  .child{
-    border: 1px solid #ddd; /* Optional styling */
-    border-radius: 8px; /* Optional styling */
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Optional styling */
-  }
-  
-  .product img {
-    border-radius: 8px; /* Optional styling */
-    margin-bottom: 10px; /* Space between image and title */
-  }
-  
-  .product h3 {
-    margin-bottom: auto; /* Push the button to the bottom */
-    font-size: 1.2rem;
-    text-align: center;
-  }
-  
-  
+.productItem::before
+{
+    content: '';
+    position: absolute;
+    bottom: 100%;
+    right: 0;
+    height: 100%;
+    width: 2px;
+    background-color: hotpink;
+    transition: bottom .5s;
+}
+
+.productItem:hover.productItem::after 
+{
+    top: 0;
+}
+
+.productItem:hover.productItem::before
+{
+    bottom: 0;
+}
+
+.wishList i
+{
+    font-size:25px ;
+}

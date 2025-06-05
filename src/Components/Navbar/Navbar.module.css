@@ -1,7 +1,40 @@
 
-.navbar
+
+.logo
 {
-    z-index: 9;
-    margin-bottom: 100px !important;
-    background: green !important;
+    width: 15% ;
+}
+
+.links
+{
+    width: 65% ;
+}
+
+.socialLinks
+{
+    width: 10% ;
+}
+
+.icons
+{
+    width: 25%;
+    height: 100%;
+}
+
+.socialIcons
+{
+    font-size: 20px;
+}
+
+.shoppingCounter
+{
+    width: 120%;
+    height: 120%;
+    border-radius: 50%;
+    display: flex;
+    justify-content:center ;
+    align-items: center;
+    position: absolute;
+    top: -110%;
+    right: -80%;
 }

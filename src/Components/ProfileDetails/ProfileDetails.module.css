@@ -1,0 +1,19 @@
+.profileItem
+{
+    background-color: white;
+    box-shadow: silver 0px 0px 10px;
+    position: relative;
+    overflow: hidden;
+
+}
+
+.profileItem h3:hover
+{
+    color: red !important;
+}
+
+
+.profileHeader i
+{
+    font-size: 60px;
+}

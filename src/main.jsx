@@ -1,34 +1,39 @@
-
-import { QueryClient, QueryClientProvider } from 'react-query';
-import ReactDOM from 'react-dom/client';
-import './index.css'
+import { createRoot } from 'react-dom/client';
+import '@fortawesome/fontawesome-free/css/all.min.css';
+import 'bootstrap/dist/js/bootstrap.bundle.min.js';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
+import './index.css';
 import App from './App.jsx';
-import 'jquery/dist/jquery.min.js'
-import "bootstrap/dist/css/bootstrap.min.css";
-import "bootstrap/dist/js/bootstrap.bundle.min.js";
-import "@fortawesome/fontawesome-free/css/all.min.css";
-import 'react-multi-carousel/lib/styles.css';
-import CounterContextProvider from './Contexst/CounterContext.jsx';
-import UserContextProvider from './Contexst/UserContext.jsx';
-import CartContextProvider from './Contexst/Addtocartcontext.jsx';
+import UserContextProvider from './Context/UserContext.jsx';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import CounterContextProvider from './Context/CounterContext.jsx';
+import CartContextProvider from './Context/CartContext.jsx';
 import  { Toaster } from 'react-hot-toast';
 
-let queryClient = new QueryClient();
+const qureyClient = new QueryClient();
 
+createRoot(document.getElementById('root')).render(
+    
+    <QueryClientProvider client={qureyClient}>
 
-const root = ReactDOM.createRoot(document.getElementById("root"));
-root.render(
-        <QueryClientProvider client={queryClient}>
-            <UserContextProvider>
+        <UserContextProvider>
+
+            <CounterContextProvider>
+                
                 <CartContextProvider>
-                    <CounterContextProvider>
+
                         <App />
-                    </CounterContextProvider>
-                    <Toaster />
+                        <Toaster />
+                    
                 </CartContextProvider>
-            </UserContextProvider>
-            
-        </QueryClientProvider>
-        
-        
-);
+
+            </CounterContextProvider>
+
+        </UserContextProvider>
+
+    </QueryClientProvider>
+    
+
+)

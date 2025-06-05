@@ -1,54 +1,59 @@
 
+import React, { useContext, useEffect } from 'react'
+import { createBrowserRouter, RouterProvider } from 'react-router-dom'
+import Layout from './Components/Layout/Layout';
+import Login from './Components/Login/Login';
+import Register from './Components/Register/Register';
+import Home from './Components/Home/Home';
+import Products from './Components/Products/Products';
+import Cart from './Components/Cart/Cart';
+import Category from './Components/Category/Category';
+import Brands from './Components/Brands/Brands';
+import NotFound from './Components/NotFound/NotFound';
+import { userContext } from './Context/UserContext';
+import ProductDetails from './Components/ProductDetails/ProductDetails';
+import Check from './Components/check/check';
+import Profile from './Components/Profile/Profile';
+import CategoryProducts from './Components/CategoryProducts/CategoryProducts';
+import BrandProducts from './Components/BrandProducts/BrandProducts';
+import Onlinepaydetails from './Components/OnlinPayment/OnlinePayment';
+import ProfileDetails from './Components/ProfileDetails/ProfileDetails';
+import AllOrders from './Components/AllOrders/AllOrders';
 
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 
-import Layout from "./Components/Layout/Layout.jsx"
-import Login from "./Components/Login/Login.jsx"
-import Register from "./Components/Register/Register.jsx"
-import Home from "./Components/Home/Home.jsx"
-import Products from "./Components/Products/Products.jsx"
-import Brands from "./Components/Brands/Brands.jsx"
-import Categories from "./Components/Categories/Categories.jsx"
-import Cart from "./Components/Cart/Cart.jsx"
-import Notfound from "./Components/Notfound/Notfound.jsx"
-import Categoriesdetailes from './Components/Categoriesdetailes/Categoriesdetailes.jsx';
-import { useContext, useEffect } from 'react';
-import { UserContext } from './Contexst/UserContext.jsx';
-import ProtectedRote from './Components/ProtectedRote/ProtectedRote.jsx';
-import Productsdetails from './Components/Productsdetails/Productsdetails';
-import Onlinepaydetails from './Components/Onlinepaydetails/Onlinepaydetails';
-import Allorders from './Components/Allorders/Allorders.jsx';
-import Branddetails from './Components/Branddetails/Branddetails.jsx';
+
+let routes = createBrowserRouter([
+  {path:'/' , element:<Layout/> , children:[
+    {index:true , element:<Home/>},
+    {path:'login' , element:<Login/>},
+    {path:'register' , element:<Register/>},
+    {path:'home' , element:<Home/>},
+    {path:'Products' , element:<Products/>},
+    {path:'ProductDetails/:productCategory/:productId' , element:<ProductDetails/>},
+    {path:'cart' , element:<Cart/>},
+    {path:'category' , element:<Category/>},
+    {path:'categoryProducts/:categoryId' , element:<CategoryProducts/>},
+    {path:'brands' , element:<Brands/>},
+    {path:'brandProducts/:brandId' , element:<BrandProducts/>},
+    {path:'check' , element:<Check/>},
+    {path:'allorders' , element:<AllOrders/>},
+    {path:'onlinepayment' , element:<Onlinepaydetails/>},
+    {path:'profile' , element:<Profile/> , children:[
+          {path:'profileDetails' , element:<ProfileDetails/>},
+
+    ]},
+    {path:'*' , element:<NotFound/>},
+  ]}
+])
 
 export default function App() {
-    let {setToken} = useContext(UserContext);
-    
-    useEffect(()=>{
-        setToken(localStorage.getItem("token"));
-    } , [])
 
-    
+  let {setUserToken}  = useContext(userContext)
+  useEffect(()=>{
+      setUserToken(localStorage.getItem('Token'));
+  } , [])
   
-    let routers = createBrowserRouter([
-        {path:"/" ,element:<Layout/> ,children:[
-            { index: true, element:  <Register/> },
-            {path:"/login" , element: <Login/>},
-            {path:"/register" , element:<Register/>},
-            {path:"/home" , element: <ProtectedRote><Home/></ProtectedRote>},
-            {path:"/products" , element: <ProtectedRote><Products/></ProtectedRote> },
-            {path:"/productsdetails/:productsId" , element: <ProtectedRote><Productsdetails/></ProtectedRote> },
-            {path:"/brands" , element:<ProtectedRote><Brands/></ProtectedRote> },
-            {path: ":brandsdetails/:brandId",element:<ProtectedRote><Branddetails/></ProtectedRote> },
-            {path:"/categories" , element: <ProtectedRote><Categories/></ProtectedRote>},
-            {path: ":categoriesdetails/:categoryId",element:<ProtectedRote><Categoriesdetailes /></ProtectedRote> },
-            {path:"/cart" , element:<ProtectedRote><Cart/></ProtectedRote> },
-            {path:"/Onlinepaydetails" , element:<ProtectedRote><Onlinepaydetails/></ProtectedRote> },
-            {path:"/Allorders" , element:<ProtectedRote><Allorders/></ProtectedRote> },
-
-            {path:"*" , element:<Notfound/>},
-        ]}
-    ])
-    
-  return (<RouterProvider  router={routers} ></RouterProvider>
-  )
+  return <RouterProvider router={routes}></RouterProvider>
 }
+
+

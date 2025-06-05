@@ -1,78 +1,123 @@
 
-import React, { useContext, useEffect, useState } from 'react'
-import { CartContext } from '../../Contexst/Addtocartcontext'
-import { jwtDecode } from "jwt-decode";
 
+import { useQuery } from '@tanstack/react-query';
+import axios from 'axios';
+import { jwtDecode } from 'jwt-decode';
+import React, { useState } from 'react'
+import style from './AllOrders.module.css'
 
-export default function Allorders() {
-    
-    const token = localStorage.getItem("token");
-    const user = jwtDecode(token);
-    let userId = user.id;
-    let {getAllUserOrders} = useContext(CartContext);
+export default function AllOrders() {
 
-    let [orders, setOrders] = useState([]);
-    
-    async function getAllOrders(userId){
-        try {
-            let { data } = await getAllUserOrders(userId); // جلب البيانات
-            console.log("Fetched data:", data); // تأكيد جلب البيانات
-            setOrders(data); // تحديث الحالة
-            console.log( "kgkgkgk" , orders)
-        } catch (error) {
-            console.error("Error fetching orders:", error);
-        }
+    const undecodedToken = localStorage.getItem("Token");
+    const decodedToken = jwtDecode(undecodedToken);
+    console.log("decodedToken" , decodedToken);
+
+    function getAllOrders(){
+        return axios.get(`https://ecommerce.routemisr.com/api/v1/orders/user/${decodedToken.id}`)
     }
 
-    useEffect(()=>{
-        getAllOrders(userId);
-    } ,[userId])
+    const {data , isLoading} = useQuery({
+        queryKey:['getAllOrders'],
+        queryFn:getAllOrders
+    })
 
+    const orders = data?.data;
+    
     return (
-        <div className=' p-5'>
+        <div className=' myContainer'>
+            <div className="sectionHead">
+                <div className="d-flex justify-content-start my-4">
+                    <div className="sideitem me-2"></div>
+                    <h5 className="sideItemContent pt-2 text-main">
+                        Orders
+                    </h5>
+                </div>
+                    <h3 className="mb-5">Check Your Orders</h3>
+            </div>
 
-<h2 className=' text-main'>Your orders</h2>
-            {orders? orders.map((order , index)=>  <>
-            
-                <div className="row py-5 mb-5">
-                    <hr></hr>
-                    <div className=' col-md-6'>
-                        <h3 className=' text-main'>Your {index + 1} order</h3> 
-                    </div>
-                    <div className=' col-md-6'>
-                        <h4 className=' float-end clearfix'>your {index + 1} order total price = <span className=' text-main fw-bold'>{order.totalOrderPrice} EGP</span> </h4>
-                    </div>
-                    <div className='  row  ' key={index}>
-                    {order.cartItems.map(( item ,index)=> <>
-                        <div className=' p-3 row' key={index}>
-                            <div className=" col-md-2">
-                                <img src={item.product.imageCover} className=" w-100" alt="" />
-                            </div>
 
-                            <div className=' col-md-8 ps-5'>
-                                <h3 className=' text-main'>{item.product.title}</h3>
-                                <h3 className=' '>Brand: {item.product.brand.name}</h3>
-                                <h3 className=' '>Brand: {item.product.category.name}</h3>
-                                <h3 className=' fw-bold'>count:<span>{item.count}</span></h3>
-                            </div>
-
-                            <div className=' col-md-2 position-relative '>
-                                <h3>price : {item.price}</h3>
-                                {<h3 className=' position-absolute bottom-0 end-0'> total price: <span className=' fw-bold text-main'>{item.price * item.count} EGP</span>  </h3>}
-                            </div>
-                            <hr className=' text-main mt-5'></hr>
+            { orders && orders.length > 0 ? orders.map((order , index)=> (
+            <div className=' row px-5'>
+                {console.log('ord' , orders)}
+                <div className=' col-lg-12 '>
+                    <div className={`${style.order} p-5`}>
+                        <h3 className=' text-main fw-bold'>Order Number {index+1}</h3>
+                        <div className=' d-flex justify-content-between align-items-center mt-5 ms-5'>
+                                <h5 >Date:<span className=' fw-bold'> {new Date(order.createdAt).toLocaleDateString()}</span> </h5>
+                                <h5>Is Delivered: <span className=' fw-bold'>{order.isDelivered ? "Yes" : "Not delivered yet"}</span></h5>
+                                {console.log("isDelivered" , order.isDelivered)}
                         </div>
-                    </>)}
-                    </div>
-                    
-                </div>
-                <div className=' w-50 m-auto text-center'>
-                    
-                </div>
+                        
+                        <hr className=" fw-bold text-main mb-5"></hr>
+                        <div className=' row'>
+                            {order.cartItems.map((product , index)=>(
+                                <div className=' col-lg-12'>
+                                    <div className=' row'>
+                                        <div className=' col-lg-2'>
+                                            <div className=' productImg'>
+                                                <img src={product.product.imageCover} className=' w-100' height={200} alt="" />
+                                            </div>
+                                        </div>
+                                        <div className=' col-lg-8'>
+                                            <div className=' p-4'>
+                                                <h3 className=' fw-bold'>{product.product.title}</h3>
+                                                <h4 className=' text-muted'> quantity: <span className=' fw-bold'>{product.count}</span></h4>
+                                                <h4 className=' text-muted'> price: <span className=' fw-bold'>{product.price}</span></h4>
 
-            </>) :"" }
-            <button className='btn bg-main w-50 m-auto  float-end clearfix py-4 text-white fw-bold'> total payments:  {orders.reduce((acc, order) => acc + order.totalOrderPrice, 0)}  </button>
+                                                <h4> rating: {product.product.ratingsAverage}</h4>
+                                            </div>
+                                        </div>
+
+                                        <div className=' col-lg-2'>
+                                            <h3 className=' fw-bolder'>{product.count * product.price} EGP</h3>
+                                        </div>
+
+                                    </div>
+                                    
+                                    <hr className=" fw-bold text-main mb-5"></hr>
+
+                                </div>
+                            ))}
+
+                            <div className='col-lg-12 '>
+                                <div className=' row'>
+                                    <div className=' col-lg-4'>
+                                        <div className=' payment'>
+                                            <h3 className=' fw-bold'>Payment</h3>
+                                            <h4 className=' my-4'>Payed at : <span className=' fw-bold'>{new Date(order.paidAt).toLocaleDateString()}</span></h4>
+                                        </div>
+                                    </div>
+
+                                    <div className=' col-lg-4'>
+                                        <div className=' delivery'>
+                                            <h3 className=' fw-bold'>Delivery</h3>
+                                            <p className=' text-muted'>Address : <span className=' fw-bold'>{order.shippingAddress.city}</span></p>
+                                            <p className=' text-muted'>phone : <span className=' fw-bold'>{order.shippingAddress.phone}</span></p>
+                                            <p className=' text-muted'>Name : <span className=' fw-bold'>{order.shippingAddress.details}</span></p>
+                                        </div>
+                                    </div>
+
+                                    <div className=' col-lg-4'>
+                                        <div className=' totalPayed'>
+                                            <h3>Total Order Price : <span className=' fw-bold'>{order.totalOrderPrice} EGP</span> </h3>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                        </div>
+
+                    </div>
+                </div>
+                                        <hr className=" fw-bold text-main mb-5"></hr>
+
+            </div>
+            
+            )) 
+            : <div className=' vh-100 d-flex justify-content-center align-items-center'>
+                    <h2 className=' text-main'>there is no orders Yet</h2>
+                </div>}
 
         </div>
-  )
+    )
 }

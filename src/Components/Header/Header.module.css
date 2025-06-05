@@ -1,0 +1,20 @@
+
+
+.slick-dots li button:before {
+    font-size: 22px;  /* Adjust dot size */
+    color: red !important;      /* Default dot color */
+    opacity: 0.7;     /* Transparency */
+    transition: all 0.3s ease-in-out;
+}
+
+/* Style the active dot */
+.slick-dots li.slick-active button:before {
+    color: green !important;  /* Change color of selected dot */
+    opacity: 1 !important;         /* Make it fully visible */
+    font-size: 36px;               /* Increase size */
+}
+
+.myMt
+{
+    margin-top: 100px !important;
+}

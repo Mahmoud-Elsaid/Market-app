@@ -1,1 +1,16 @@
-.Footer {}
+
+
+.footer a 
+{
+    color: white;
+    transition: font-size 0.5s;
+}
+
+
+
+.footer a:hover 
+{ 
+
+    color: green !important;
+    font-size: 19px;
+}

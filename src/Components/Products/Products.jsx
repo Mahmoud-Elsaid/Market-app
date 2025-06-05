@@ -1,40 +1,37 @@
 
 
-import { useContext } from "react";
-import style from "./Products.module.css"
-import axios from "axios"
-import { RotatingLines } from "react-loader-spinner";
-import {  useQuery } from "react-query";
-import { Link } from "react-router-dom";
-import { CartContext } from "../../Contexst/Addtocartcontext";
+import React, { useContext, useState } from 'react';
+import style from './Products.module.css';
+import axios from 'axios';
+import { useQuery } from '@tanstack/react-query';
+import { Link } from 'react-router-dom';
+import Header from '../Header/Header';
+import { counterContext } from '../../Context/CounterContext';
+import { CartContext } from '../../Context/CartContext';
 import toast from "react-hot-toast";
 
-
 export default function Products() {
-
     
+    const {addToCart} = useContext(CartContext);
+    const { setNumberOfCartItems , numOfCartItems} = useContext(counterContext);
 
 
-    function getProducts(){
-        return axios.get("https://ecommerce.routemisr.com/api/v1/Products")
-    }
-    
-    let {data , isLoading} = useQuery("myproducts" , getProducts ,{
-            cacheTime:Infinity,
-            staleTime: Infinity
-          // refetchInterval:1000
-          // refetchOnWindowFocus:false
-          // refetchOnMount:false
-          // staleTime: 2000,
-          // enabled: false
-        } );
-    console.log(data?.data.data , ("isloading " , isLoading));
+    //Update cart Number in the navbar
+      let {getCartProducts}= useContext(CartContext);
+      async function getCartAllProducts(){
+            let response = await getCartProducts();
+            console.log("hello")
+            setNumberOfCartItems(response.data.numOfCartItems);
+            console.log("product" , response);
+            console.log(numOfCartItems)
+        }
+
+    const [page, setPage] = useState(1);
+    const limit = 10;
 
 
-    let {addToCart} = useContext(CartContext);
-
-    async function addProductToCart(productId)
-    {
+    // Add product to cart
+    async function AddProductToCart(productId){
         let response = await addToCart(productId);
         if(response.data.status === "success")
         {
@@ -44,62 +41,127 @@ export default function Products() {
         {
             toast.error("product didnt Added to Cart")
         }
+        console.log("response",response)
     }
 
 
-    
+    // get products 
+    function getAllProducts({ queryKey }) {
+        const [, currentPage] = queryKey;
+        return axios.get(`https://ecommerce.routemisr.com/api/v1/products?limit=${limit}&page=${currentPage}`);
+    }
+
+    const { data, isLoading } = useQuery({
+        queryKey: ['allProducts', page],
+        queryFn: getAllProducts,
+    });
+
     return (
         <>
-            {isLoading ? <>
-                <div className=" w-100 vh-100 d-flex justify-content-center align-items-center">
-                <RotatingLines
-                        visible={true}
-                        height="96"
-                        width="96"
-                        color="grey"
-                        strokeWidth="5"
-                        animationDuration="0.75"
-                        ariaLabel="rotating-lines-loading"
-                        wrapperStyle={{}}
-                        wrapperClass=""
-                />
-                </div>
-            </> : ""}
-            {data?.data.data ? <div className=" container mt-5">
-                <Link className={`${style.dicorationNon} `} to='/products'><h2 className={`py-5 ${style.colormain}`}  >Products</h2></Link>
-                <div className=" row gy-5  ">
-                    {data.data.data.map((Products )=> <>
-                        <div  key={Products._id} height={450} className={`p-2  text-center product text-black col-xl-3 col-lg-4 col-md-6`} >
-                        <Link className={`${style.dicorationNon}  text-black`}   to={`/Productsdetails/${Products._id}`}>
-                                <div  className={` p-2  text-center`}>
-                                    <img className="w-100" height={350} src={Products.imageCover} alt="" />
-                                    <h3 className=" text-main">{Products.title}</h3>
-                                    <h4 className=" ">{Products.category.name}</h4>
-                                    <h4 className=" ">{Products.brand.name}</h4>
-                                    <div className=" row">
-                                        <div className=" col-md-6">
-                                            <h6>{Products.price} EGP</h6>
-                                            
-                                        </div>
-                                        <div className=" col-md-6">
-                                            <h6>{Products.ratingsAverage} <i className=" text-warning fa-solid fa-star"></i></h6>
-                                        </div>
-                                    </div>
-                                    <button className= {`${style.Productsbutton} btn text-white my-3 py-3 px-5 `}>View detaild</button>
-                                </div>
-                        </Link>
-                        <button onClick={()=> addProductToCart(Products._id)} className= {`${style.Productsbutton} btn text-white my-3 py-3 px-5 `}>Add cart</button>
+            <Header />
+            <div className={`${style.myContainer} mx-auto mt-5`}>
+                {isLoading ? (
+                    <div className="vh-100 d-flex justify-content-center align-items-center">
+                        <h1>product is loading</h1>
+                    </div>
+                ) 
+                : (
+                    <>
+            <div className="row g-2 gx-2">
+              {data?.data.data ? (
+                <>
+                  <div className="sectionHead">
+                    <div className="d-flex justify-content-start my-4">
+                      <div className="sideitem me-2"></div>
+                      <h5 className="sideItemContent pt-2 text-main">
+                        Products
+                      </h5>
+                    </div>
+                    <h3 className="mb-5">Browse By Products</h3>
+                  </div>
+
+                  {data.data.data.map((product, index) => {
+
+                    return (
+                      <div key={index} className={`col-xl-3 col-lg-4 col-md-8 p-3 text-center`}style={{ height: 670 }}>
+                        <div className={`${style.productItem} p-2`} style={{ height: 655 }}>
+                          <div>
+                            <h3 className="fw-bold">
+                              {product.title.split(' ').slice(0, 2).join(' ')}
+                            </h3>
+
+                            <img
+                              src={product.imageCover}
+                              className="w-100"
+                              style={{ height: 300 }}
+                              alt=""
+                            />
+
+                            <div className="d-flex justify-content-between my-3 px-3">
+                              <div className="ratting">
+                                <h4>
+                                  {product.ratingsAverage}
+                                  <i className="text-warning ms-1 fa-solid fa-star"></i>
+                                </h4>
+                              </div>
+                              <div className={`${style.productCart}`}>
+                                <Link to="/cart">
+                                  <h4>
+                                    <i className="fa-solid fa-cart-shopping"></i>
+                                  </h4>
+                                </Link>
+                              </div>
+                            </div>
+
+                            <span>{product.description.split(' ').slice(0, 15).join(' ')}</span>
+
+                            <div className="text-main d-flex justify-content-end">
+                              <h4>{product.price}$</h4>
+                            </div>
+
+                            <button className={`${style.detailsBtn} btn bg-main p-3 mx-2 mt-4`}>
+                              <Link
+                                className="text-white fw-bold"
+                                to={`/ProductDetails/${product.category._id}/${product._id}`}
+                              >
+                                view details
+                              </Link>
+                            </button>
+
+                            <button onClick={() => {
+                                AddProductToCart(product._id);
+                                getCartAllProducts()
+                                }} className={`${style.detailsBtn} btn bg-main p-3 mx-2 text-white fw-bold mt-4`}>
+                              Add to cart
+                            </button>
+                          </div>
                         </div>
-                        
-                    </>)}
+                      </div>
+                    );
+                  })}
+                </>
+              ) : (
+                <div className="vh-100 d-flex justify-content-center align-align-items-start p-5">
+                  <h2 className="fw-bold mt-5">'No brands Found'</h2>
                 </div>
-            </div> : ""}
-        </>
-    )
-  
+              )}
+            </div>
+
+            <div className="w-50 mx-auto d-flex justify-content-center align-items-center mt-3">
+              {[1, 2, 3, 4].map(num => (
+                <button
+                  key={num}
+                  className={`btn mx-2 ${page === num ? 'bg-main' : 'bg-warning'} text-white`}
+                  onClick={() => setPage(num)}
+                >
+                  {num}
+                </button>
+              ))}
+            </div>
+          </>
+        )}
+      </div>
+    </>
+  );
 }
-
-
-
-
 

@@ -1,59 +1,74 @@
 
 
+// import React from 'react'
+// import './Brands.module.css'
+// export default function Brands() {
+//   return (
+//     <>
+//         <h1>Brands</h1>
+//     </>
+//   )
+// }
 
-import axios from "axios"
-import style from "./Brands.module.css"
-import { Link } from "react-router-dom";
-import { useQuery } from "react-query";
-import { RotatingLines } from "react-loader-spinner";
 
 
 
+import React from 'react'
+import axios from 'axios'
+import { useQuery } from '@tanstack/react-query';
+import Header from '../Header/Header';
+import style from './Brands.module.css';
+import { Link } from 'react-router-dom';
 
 export default function Brands() {
-    
-    
-    function getBrands(){
-        return axios.get("https://ecommerce.routemisr.com/api/v1/brands");
-    }
 
-    let {data , isLoading} = useQuery("myCategory" , getBrands )
+  function getBrands(){
+    return axios.get(`https://ecommerce.routemisr.com/api/v1/brands`);
+  }
 
-    return (
-        <>
-            {isLoading ? <>
-                                <div className=" w-100 vh-100 d-flex justify-content-center align-items-center">
-                                                <RotatingLines
-                                                        visible={true}
-                                                        height="96"
-                                                        width="96"
-                                                        color="grey"
-                                                        strokeWidth="5"
-                                                        animationDuration="0.75"
-                                                        ariaLabel="rotating-lines-loading"
-                                                        wrapperStyle={{}}
-                                                        wrapperClass=""
-                                                />
-                                                
-                                                </div>
-                        </> : <>
-                        {data?.data.data ? <div className=" container mt-5">
-                            <h2 className={`py-5 cursor-pointer ${style.colormain}`}>Brands</h2>
-                            <div className=" row gy-5">
-                                    {data?.data.data.map((Brandds )=> <>
-                                    
-                                        <Link to={`/brandsdetails/${Brandds._id}`} key={Brandds._id} height={450} className={` text-black col-md-3`} style={{ textDecoration: "none" }}>
-                                                <div className={` product  ${`${style.product} , ${style.item}` } p-2  text-center`}>
-                                                    <img className="w-100" height={350} src={Brandds.image} alt="" />
-                                                    <h3>{Brandds.name}</h3>
-                                                    <button className= {`${style.categorybutton} btn text-white my-3 py-3 px-5 `}>View detaild</button>
-                                                </div>
-                                        </Link>
-                                    </>)}
-                                </div>
-                            </div> : ""}
-                        </>}
-            
-        </>
-    )
+  const { data, isLoading } = useQuery({
+    queryKey: ['getBrands'],
+    queryFn: getBrands
+  });
+
+  console.log("getBrands" , data?.data.data)
+  return (
+    <>
+      <Header />
+      <div className='p-5'>
+        <div className='sectionHead p-5'>
+          <div className='d-flex justify-content-start my-4'>
+            <div className='sideitem me-2'></div>
+            <h5 className='sideItemContent pt-2 text-main'>Brands</h5>
+          </div>
+          <h3 className='mb-5'>Browse By Brands</h3>
+        </div>
+
+        {isLoading? <div className=' vh-100 d-flex justify-content-center align-items-center'>
+                <h2>Is Loading</h2>
+        </div>:
+        <div className='row px-5'>
+        {data?.data && data.data.data.length>0 ? data.data.data.map((brand, index) => (<div  key={index} className={` col-xl-3 col-lg-4 col-md-5  p-3  text-center `} style={{ height: 500 }} >
+                                  <div className={`${style.productItem} p-2 `} style={{ height: 450 }}>
+                                      <div>
+                                            <h3 className=' fw-bold'>{brand.name.split(" ").slice(0, 2).join(" ")}</h3>
+                                            <img src={brand.image} className=' w-100' style={{ height: 350 }} alt="" />
+                                            
+                                            <button  className={`${style.detailsBtn} btn bg-main p-3 `}> <Link to={`/brandProducts/${brand._id}`} className=' text-white'>view Products</Link> </button>
+                                      </div>
+                                          
+                                      </div>
+                                      </div>
+
+        )) : <div className=' vh-100 d-flex justify-content-center align-align-items-start'>
+                <h2 className=' fw-bold '>'No brands Found'</h2>
+          </div>}
+      </div>
+        }
+        
+
+
+      </div>
+    </>
+  );
 }
