@@ -9,7 +9,7 @@ import Products from './Components/Products/Products';
 import Cart from './Components/Cart/Cart';
 import Category from './Components/Category/Category';
 import Brands from './Components/Brands/Brands';
-import NotFound from 'src/Components/NotFound/NotFound';
+import NotFound from './Components/NotFound/NotFound';
 import { userContext } from './Context/UserContext';
 import ProductDetails from './Components/ProductDetails/ProductDetails';
 import Check from './Components/check/check';
