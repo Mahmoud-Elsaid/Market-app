@@ -19,7 +19,7 @@ export default function Onlinepaydetails() {
   }, []);
 
   async function submitDetails(values) {
-    let response = await onlinePayment(cartId, values, "http://localhost:5173");
+    let response = await onlinePayment(cartId, values, "https://heartfelt-madeleine-1609a5.netlify.app/");
     console.log("details submit", response);
     window.location.href = response.data.session.url;
   }
